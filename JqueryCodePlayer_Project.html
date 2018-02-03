@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="us">
+<head>
+	<meta charset="utf-8">
+	<title>jQuery UI Example Page</title>
+	<link href="./jquery-ui-1.12.1/jquery-ui.css" rel="stylesheet">
+	<link rel="stylesheet" href="./jquery-ui-1.12.1/jquery-ui.theme.css">
+	<style>
+	body{
+		font-family: "Trebuchet MS", sans-serif;
+		margin: 0px;
+		padding: 0;
+	}
+	#buttonContainer {
+		width: 300px;
+		margin: 0 auto;
+	}
+	#header {
+		width:100%;
+		background-color: #EEEEEE;
+		padding: 5px;
+		height: 30px;
+	}
+	#html {
+		border-top-left-radius: 4px;
+		border-bottom-left-radius: 4px;
+	}
+	#output {
+		border-top-right-radius: 4px;
+		border-bottom-right-radius: 4px;
+		border-right:  1px solid grey;
+	}
+	#logo {
+		font-weight: bold;
+		font-size: 120%;
+		float: left;
+		padding: 3px 5px;
+	}
+	.active {
+		background-color: #33ccff;
+	}
+
+	.hidden {
+		display: none;
+	}
+
+	.hightlightedButton {
+		background-color: grey;
+	}
+	.panel {
+		float:left;
+		width: 50%;
+		border-left: none;
+	}
+
+	.toggleButton {
+		float: left;
+		border: 1px solid grey;
+		padding: 4px;
+		border-right: none;
+	}
+
+
+
+	iframe {
+		border: none
+	}
+
+	textarea {
+		width: 50%;
+		height: 100%;
+		resize: none;
+		border-top: none;
+	}
+
+	</style>
+</head>
+<body>
+
+	<div id="header">
+
+		<div id="logo">
+			CodePlayer
+		</div>
+
+		<div id="buttonContainer">
+			<div id="html" class="active toggleButton"> HTML</div>
+			<div id="css" class="toggleButton"> CSS</div>
+			<div id="javascript" class="toggleButton"> JavaScript</div>
+			<div id="output" class="active toggleButton"> Output</div>
+		</div>
+
+	</div>
+
+	<div id="bodyContainer">
+
+		<textarea id="htmlPanel" class="panel"><p id="p1"></p> <p id ="p2"> This will be green</p></textarea>
+		<textarea id="cssPanel" class="panel hidden">#p2{ color: green; } </textarea>
+		<textarea id="javascriptPanel" class="panel hidden">document.getElementById("p1").innerHTML = "Hello!";</textarea>
+
+		<iframe id="outputPanel" class="panel">		</iframe>
+
+	</div>
+
+
+	<script src="./jquery-ui-1.12.1/external/jquery/jquery.js"></script>
+	<script src="./jquery-ui-1.12.1/jquery-ui.js"></script>
+	<script>
+
+	function updateOutput() {
+		$("iframe").contents().find("html").html("<html><head><style type='text/css'> "
+		+  $("#cssPanel").val() + "</style></head><body>" + $("#htmlPanel").val()
+		+ "</body></html>");
+		document.getElementById("outputPanel").contentWindow.eval($("#javascriptPanel").val());
+	}
+
+	function updateWidth() {
+		var numPanels = $(".panel").length - $(".hidden").length;
+		$(".panel").width(($(window).width() / numPanels) - 10);
+	}
+
+	$(".toggleButton").hover(function() {
+		$(this).addClass("hightlightedButton");
+	}, function() {
+		$(this).removeClass("hightlightedButton");
+	});
+
+	$(".toggleButton").click(function() {
+		$(this).removeClass("hightlightedButton");
+		$(this).toggleClass("active");
+
+		var panelID = $(this).attr("id") + "Panel";
+		//alert(panelID);
+		$("#" + panelID).toggleClass("hidden");
+
+		updateWidth();
+
+	});
+
+	$(".panel").height($(window).height() - $("#header").height() - 15);
+
+	updateWidth();
+
+	updateOutput();
+
+	$("textarea").on("change keyup paste", function() {
+		updateOutput();
+	});
+
+
+</script>
+</body>
+</html>
